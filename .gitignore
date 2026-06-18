@@ -14,7 +14,10 @@ env/
 ENV/
 
 # Large GIS raw datasets and patches
-data/raw/
+data/raw/**/*
+!data/raw/clear/
+!data/raw/clear/chennai_clear.tif
+!data/raw/clear/guwahati_clear.tif
 data/patches/
 
 # Web uploads cache (ignore uploads but keep directory structure)

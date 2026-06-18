@@ -669,7 +669,8 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Inference server returned an error');
+                    const errData = await response.json().catch(() => ({ detail: 'Inference server returned an error' }));
+                    throw new Error(errData.detail || 'Inference server returned an error');
                 }
 
                 const result = await response.json();
