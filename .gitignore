@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Large GIS raw datasets and patches
+data/raw/
+data/patches/
+
+# Web uploads cache (ignore uploads but keep directory structure)
+data/web_uploads/*
+!data/web_uploads/.gitkeep
+
+# Ignore scratch scripts/images if not needed in final repo
+scratch/direct_crop_check.png
+scratch/tiled_crop_check.png
+scratch/fused_crop_check.png
+scratch/ref_crop_check.png
+scratch/cloudy_crop_check.png
+scratch/final_crop_check.png
+scratch/guwahati_hybrid_fused.tif
+
+# Ignore intermediate checkpoints (keep only final epoch 30 for production)
+models/generator_epoch_5.pth
+models/generator_epoch_10.pth
+models/generator_epoch_15.pth
+models/generator_epoch_20.pth
+models/generator_epoch_25.pth

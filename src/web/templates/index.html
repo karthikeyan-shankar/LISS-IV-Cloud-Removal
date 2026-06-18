@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LISS-IV Generative AI Cloud Reconstruction Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #06020f;
+            --bg-card: rgba(20, 10, 35, 0.4);
+            --border-card: rgba(255, 255, 255, 0.06);
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #ec4899;
+            --accent-glow: rgba(139, 92, 246, 0.35);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+        }
+
+        header {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border-card);
+            backdrop-filter: blur(12px);
+            background-color: rgba(6, 2, 15, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #ffffff, #d8b4fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-isro {
+            background-color: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        main {
+            flex: 1;
+            padding: 2.5rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.75rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 0.5rem;
+        }
+
+        .upload-box {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.01);
+            margin-top: 1rem;
+        }
+
+        .upload-box:hover {
+            border-color: var(--accent-primary);
+            background-color: rgba(139, 92, 246, 0.03);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
+        }
+
+        .upload-box svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--accent-primary);
+        }
+
+        .upload-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .upload-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .file-selected-name {
+            font-size: 0.8rem;
+            color: #c084fc;
+            word-break: break-all;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-process {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-process:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-process:disabled {
+            background: #27272a;
+            color: #71717a;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+            display: none; /* Hidden until processing completes */
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .main-workspace {
+            min-height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Empty State / Welcome Screen */
+        .workspace-empty {
+            text-align: center;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .workspace-empty svg {
+            width: 64px;
+            height: 64px;
+            stroke: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        /* Loading / Processing State */
+        .workspace-loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .satellite-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border: 2px solid rgba(139, 92, 246, 0.15);
+            border-radius: 50%;
+            border-top-color: var(--accent-primary);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .satellite-loader::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-bottom-color: var(--accent-secondary);
+            animation: spin 1s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        /* Results / Image Compare View */
+        .workspace-results {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comparison-container {
+            width: 100%;
+            height: 480px;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-card);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .comparison-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            pointer-events: none; /* Let clicks pass through to container */
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .image-before {
+            background-image: url('');
+            z-index: 10;
+        }
+
+        .image-after {
+            background-image: url('');
+            z-index: 5;
+        }
+
+        .comparison-slider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-primary);
+            left: 50%;
+            z-index: 20;
+            cursor: ew-resize;
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .slider-handle {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-color: var(--bg-base);
+            border: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent-primary);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 0.8rem;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .slider-label {
+            position: absolute;
+            top: 1rem;
+            background-color: rgba(6, 2, 15, 0.7);
+            border: 1px solid var(--border-card);
+            padding: 0.3rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            pointer-events: none; /* Let clicks pass through to container */
+            user-select: none;
+        }
+
+        .label-before {
+            left: 1rem;
+            color: #ef4444;
+            z-index: 21;
+        }
+
+        .label-after {
+            right: 1rem;
+            color: #10b981;
+            z-index: 21;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .metric-val-diff {
+            font-size: 0.8rem;
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        /* Database Banner */
+        .db-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            padding: 0.75rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .db-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .view-btn:hover {
+            color: #fff;
+        }
+        .view-btn.active {
+            background-color: var(--accent-primary);
+            color: #fff;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title-container">
+            <div class="header-logo"></div>
+            <h1>LISS-IV Space Reconstruction Portal</h1>
+            <span class="badge-isro">BAH 2026</span>
+        </div>
+        <div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Generative AI Cloud Removal Framework</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            
+            <!-- SIDEBAR CONTROL CARD -->
+            <div class="card sidebar">
+                <div>
+                    <h2>Input Scene</h2>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Upload a cloudy LISS-IV GeoTIFF (.tif) file. The backend will automatically match and fuse it with historical references.</p>
+                </div>
+
+                <!-- Cloudy File Input -->
+                <div class="upload-box" onclick="document.getElementById('cloudyInput').click()">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                    </svg>
+                    <span class="upload-label">Cloudy GeoTIFF (.tif)</span>
+                    <span class="upload-sublabel">Drag or browse local files</span>
+                    <span class="file-selected-name" id="cloudyName"></span>
+                    <input type="file" id="cloudyInput" style="display: none" accept=".tif,.tiff" onchange="handleFileSelect()">
+                </div>
+
+                <!-- Database Status -->
+                <div class="db-status">
+                    <span class="db-dot"></span>
+                    <span>Historical Database Connected (Active)</span>
+                </div>
+
+                <!-- Process Button -->
+                <button class="btn-process" id="processBtn" disabled onclick="processReconstruction()">
+                    Remove Clouds
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+
+                <!-- Download Output -->
+                <button class="btn-download" id="downloadBtn" onclick="downloadTiff()">
+                    Download Cloud-Free GeoTIFF (.tif)
+                </button>
+            </div>
+
+            <!-- MAIN WORKSPACE CARD -->
+            <div class="card main-workspace">
+                
+                <!-- Welcome Screen -->
+                <div class="workspace-empty" id="emptyState">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 01.553-.894L9 2m0 18l6-3m-6 3V2m6 15l5.447 2.724A1 1 0 0021 18.82V8.043a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 2" />
+                    </svg>
+                    <h3>Workspace Ready</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; max-width: 450px; margin: 0 auto;">
+                        Upload a cloudy GeoTIFF scene. Our system will extract the geographical coordinates, query the database, find the correct historical clear scene, and perform the surface reconstruction.
+                    </p>
+                </div>
+
+                <!-- Processing Loading -->
+                <div class="workspace-loading" id="loadingState">
+                    <div class="satellite-loader"></div>
+                    <div class="loading-text" id="statusText">Reading GeoTIFF Coordinates...</div>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; text-align: center; max-width: 400px;">
+                        Extracting CRS bounding box and automatically matching it with historical reference files.
+                    </p>
+                </div>
+
+                <!-- Comparison Display -->
+                <div class="workspace-results" id="resultsState">
+                    
+                    <!-- View Mode Selector Segmented Controls -->
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-card); padding: 0.35rem; border-radius: 10px; width: fit-content; align-self: flex-start;">
+                        <button class="view-btn active" id="viewBtnNatural" onclick="switchViewMode('natural')">Natural Color</button>
+                        <button class="view-btn" id="viewBtnFcc" onclick="switchViewMode('fcc')">False Color (FCC)</button>
+                        <button class="view-btn" id="viewBtnNdvi" onclick="switchViewMode('ndvi')">NDVI Heatmap</button>
+                    </div>
+
+                    <div class="comparison-container" id="sliderContainer">
+                        <div class="slider-label label-before">Original Cloudy</div>
+                        <div class="slider-label label-after">Reconstructed (Cloud-Free)</div>
+                        
+                        <!-- Output Clear Image -->
+                        <div class="comparison-img image-after" id="afterImage"></div>
+                        
+                        <!-- Input Cloudy Image (slipped over the after) -->
+                        <div class="comparison-img image-before" id="beforeImage"></div>
+                        
+                        <!-- The Slider bar -->
+                        <div class="comparison-slider" id="sliderBar">
+                            <div class="slider-handle">&lt;&gt;</div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics cards -->
+                    <div class="metrics-grid">
+                        
+                        <div class="metric-card">
+                            <span class="metric-label">Vegetation Health (NDVI)</span>
+                            <span class="metric-value" id="ndviReconstructed">0.00</span>
+                            <span class="metric-val-diff" id="ndviImprovement">+0.0% improvement</span>
+                        </div>
+
+                        <div class="metric-card">
+                            <span class="metric-label">Auto-Matched Reference</span>
+                            <span class="metric-value" style="font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; word-break: break-all; margin-top: 0.25rem;" id="matchedReferenceName">None</span>
+                            <span class="metric-val-diff" style="color: #10b981;">Overlapping coordinates</span>
+                        </div>
+
+                        <div class="metric-card">
+                            <span class="metric-label">Data Fidelity</span>
+                            <span class="metric-value" style="color: #60a5fa;">Analysis-Ready</span>
+                            <span class="metric-val-diff" style="color: #60a5fa;">Coordinate reference preserved</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let cloudyFile = null;
+        let downloadUrl = "";
+        let activePreviews = {
+            cloudy: {},
+            reconstructed: {}
+        };
+        let currentMode = 'natural';
+
+        function switchViewMode(mode) {
+            currentMode = mode;
+            // Update active state of buttons
+            document.getElementById('viewBtnNatural').classList.toggle('active', mode === 'natural');
+            document.getElementById('viewBtnFcc').classList.toggle('active', mode === 'fcc');
+            document.getElementById('viewBtnNdvi').classList.toggle('active', mode === 'ndvi');
+
+            // Apply selected mode images
+            if (activePreviews.cloudy[mode] && activePreviews.reconstructed[mode]) {
+                document.getElementById('beforeImage').style.backgroundImage = `url('${activePreviews.cloudy[mode]}?t=${Date.now()}')`;
+                document.getElementById('afterImage').style.backgroundImage = `url('${activePreviews.reconstructed[mode]}?t=${Date.now()}')`;
+            }
+        }
+
+        function handleFileSelect() {
+            const input = document.getElementById('cloudyInput');
+            const label = document.getElementById('cloudyName');
+            
+            if (input.files && input.files[0]) {
+                cloudyFile = input.files[0];
+                label.textContent = input.files[0].name;
+            } else {
+                cloudyFile = null;
+                label.textContent = "";
+            }
+
+            document.getElementById('processBtn').disabled = !cloudyFile;
+        }
+
+        async function processReconstruction() {
+            if (!cloudyFile) return;
+
+            // Show loading state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsState').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'flex';
+            document.getElementById('downloadBtn').style.display = 'none';
+            
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = "Reading GeoTIFF Coordinates...";
+
+            const formData = new FormData();
+            formData.append('cloudy_file', cloudyFile);
+
+            try {
+                // Simulate status change text for better UX
+                setTimeout(() => statusText.textContent = "Querying Historical Database...", 1200);
+                setTimeout(() => statusText.textContent = "Running Generative GAN Reconstruction...", 2500);
+
+                const response = await fetch('/api/reconstruct', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Inference server returned an error');
+                }
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Store all preview URLs
+                    activePreviews.cloudy = result.cloudy_previews;
+                    activePreviews.reconstructed = result.reconstructed_previews;
+
+                    // Apply current mode
+                    switchViewMode(currentMode);
+                    
+                    // Update metrics
+                    document.getElementById('ndviReconstructed').textContent = result.metrics.reconstructed_ndvi.mean.toFixed(2);
+                    document.getElementById('ndviImprovement').textContent = `${result.metrics.improvement} improvement`;
+                    document.getElementById('matchedReferenceName').textContent = result.matched_reference;
+                    
+                    // Set download URL
+                    downloadUrl = result.download_url;
+                    
+                    // Show results state
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('resultsState').style.display = 'flex';
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    
+                    // Reset slider position to 50% (after showing the container so layout recalculations work properly)
+                    updateSlider(50);
+                }
+            } catch (err) {
+                alert(`Error processing image: ${err.message}`);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'flex';
+            }
+        }
+
+        function downloadTiff() {
+            if (downloadUrl) {
+                window.open(downloadUrl, '_blank');
+            }
+        }
+
+        // --- SLIDER INTERACTION LOGIC ---
+        const container = document.getElementById('sliderContainer');
+        const beforeImg = document.getElementById('beforeImage');
+        const sliderBar = document.getElementById('sliderBar');
+        let isDragging = false;
+
+        function updateSlider(percentage) {
+            percentage = Math.max(0, Math.min(100, percentage));
+            const clipValue = `polygon(0% 0%, ${percentage}% 0%, ${percentage}% 100%, 0% 100%)`;
+            beforeImg.style.clipPath = clipValue;
+            beforeImg.style.WebkitClipPath = clipValue;
+            sliderBar.style.left = `${percentage}%`;
+        }
+
+        // Start dragging when mouse is pressed anywhere inside the container
+        container.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Prevent text selection/native image dragging
+            isDragging = true;
+            moveSlider(e);
+        });
+        
+        window.addEventListener('mouseup', () => isDragging = false);
+        
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            moveSlider(e);
+        });
+
+        function moveSlider(e) {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            updateSlider(percentage);
+        }
+
+        // Touch support (Mobile)
+        container.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent scrolling while sliding
+            isDragging = true;
+            moveSliderTouch(e);
+        }, { passive: false });
+        
+        window.addEventListener('touchend', () => isDragging = false);
+        
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            moveSliderTouch(e);
+        }, { passive: false });
+
+        function moveSliderTouch(e) {
+            const rect = container.getBoundingClientRect();
+            if (e.touches && e.touches.length > 0) {
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                updateSlider(percentage);
+            }
+        }
+    </script>
+</body>
+</html>

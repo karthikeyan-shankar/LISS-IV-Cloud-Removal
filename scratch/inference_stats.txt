@@ -1,0 +1,7 @@
+Cloudy shape: (3, 1024, 1024)
+Cloudy min/max: 29.0 / 283.0
+Ref min/max: 36.0 / 289.0
+Scale: 1023.0
+Reconstructed min/max/mean: 38.01472091674805 / 408.17547607421875 / 94.47821044921875
+Cloud mask positive: 70259
+Masked reconstructed mean: 99.30935880962231
