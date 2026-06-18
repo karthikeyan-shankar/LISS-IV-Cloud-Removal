@@ -1,3 +1,13 @@
+---
+title: LISS-IV Cloud Removal
+emoji: 🛰️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # ISRO BAH 2026: Cloud Removal and Surface Reconstruction for LISS-IV Imagery
 
 This project is a Generative AI-based framework developed for the **Bharatiya Antariksh Hackathon (BAH) 2026** (Problem Statement 2). It utilizes a Hybrid Generative Adversarial Network (GAN) to reconstruct cloud-covered regions in high-resolution LISS-IV satellite imagery by fusing today's cloudy scenes with historical cloud-free reference scenes.
