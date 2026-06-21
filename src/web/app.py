@@ -397,6 +397,24 @@ async def reconstruct_image(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Reconstruction failed: {str(e)}")
 
+@app.get("/api/samples/{sample_name}")
+async def get_sample_file(sample_name: str):
+    """
+    Exposes the pre-loaded sample cloudy TIFF files so the frontend can
+    fetch and run them programmatically for a foolproof demo.
+    """
+    if sample_name == "guwahati":
+        file_path = "guwahati_cloudy_test.tif"
+    elif sample_name == "chennai":
+        file_path = "chennai_cloudy_test.tif"
+    else:
+        raise HTTPException(status_code=404, detail="Sample not found")
+        
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"Sample file {file_path} not found on disk")
+        
+    return FileResponse(file_path, media_type="image/tiff", filename=file_path)
+
 @app.get("/api/download/{filename}")
 async def download_file(filename: str):
     file_path = os.path.join(UPLOAD_DIR, filename)

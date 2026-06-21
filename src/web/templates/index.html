@@ -433,6 +433,43 @@
             font-weight: 500;
         }
 
+        /* Sample Buttons */
+        .samples-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .samples-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .samples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        .sample-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            color: var(--text-color);
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .sample-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #a78bfa;
+        }
+
         /* Database Banner */
         .db-status {
             font-size: 0.75rem;
@@ -508,6 +545,15 @@
                     <span class="upload-sublabel">Drag or browse local files</span>
                     <span class="file-selected-name" id="cloudyName"></span>
                     <input type="file" id="cloudyInput" style="display: none" accept=".tif,.tiff" onchange="handleFileSelect()">
+                </div>
+
+                <!-- Quick Demo Samples -->
+                <div class="samples-container">
+                    <span class="samples-label">Quick Test Cases (One-Click)</span>
+                    <div class="samples-grid">
+                        <button class="sample-btn" type="button" onclick="loadSample('guwahati')">Guwahati (Real)</button>
+                        <button class="sample-btn" type="button" onclick="loadSample('chennai')">Chennai (Simulated)</button>
+                    </div>
                 </div>
 
                 <!-- Database Status -->
@@ -625,6 +671,40 @@
             if (activePreviews.cloudy[mode] && activePreviews.reconstructed[mode]) {
                 document.getElementById('beforeImage').style.backgroundImage = `url('${activePreviews.cloudy[mode]}?t=${Date.now()}')`;
                 document.getElementById('afterImage').style.backgroundImage = `url('${activePreviews.reconstructed[mode]}?t=${Date.now()}')`;
+            }
+        }
+
+        async function loadSample(sampleName) {
+            // Show loading state
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsState').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'flex';
+            document.getElementById('downloadBtn').style.display = 'none';
+            
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = `Downloading ${sampleName === 'guwahati' ? 'Guwahati' : 'Chennai'} test case...`;
+            
+            try {
+                // Fetch the sample file from our API
+                const response = await fetch(`/api/samples/${sampleName}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to download sample file from server: ${response.statusText}`);
+                }
+                
+                const blob = await response.blob();
+                const filename = sampleName === 'guwahati' ? 'guwahati_cloudy_test.tif' : 'chennai_cloudy_test.tif';
+                cloudyFile = new File([blob], filename, { type: 'image/tiff' });
+                
+                // Update file input name label on UI
+                document.getElementById('cloudyName').textContent = filename;
+                document.getElementById('processBtn').disabled = false;
+                
+                // Automatically run reconstruction
+                await processReconstruction();
+            } catch (err) {
+                alert(`Error loading sample: ${err.message}`);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'flex';
             }
         }
 
