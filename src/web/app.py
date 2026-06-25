@@ -405,8 +405,6 @@ async def get_sample_file(sample_name: str):
     """
     if sample_name == "guwahati":
         file_path = "guwahati_cloudy_test.tif"
-    elif sample_name == "chennai":
-        file_path = "chennai_cloudy_test.tif"
     else:
         raise HTTPException(status_code=404, detail="Sample not found")
         

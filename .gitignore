@@ -16,7 +16,6 @@ ENV/
 # Large GIS raw datasets and patches
 data/raw/**/*
 !data/raw/clear/
-!data/raw/clear/chennai_clear.tif
 !data/raw/clear/guwahati_clear.tif
 data/patches/
 
