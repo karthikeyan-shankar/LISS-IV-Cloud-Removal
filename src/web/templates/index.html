@@ -519,7 +519,6 @@
         <div class="header-title-container">
             <div class="header-logo"></div>
             <h1>LISS-IV Space Reconstruction Portal</h1>
-            <span class="badge-isro">BAH 2026</span>
         </div>
         <div>
             <span style="font-size: 0.85rem; color: var(--text-muted);">Generative AI Cloud Removal Framework</span>
@@ -679,7 +678,7 @@
             document.getElementById('downloadBtn').style.display = 'none';
             
             const statusText = document.getElementById('statusText');
-            statusText.textContent = `Downloading ${sampleName === 'guwahati' ? 'Guwahati' : 'Chennai'} test case...`;
+            statusText.textContent = 'Downloading Guwahati test case...';
             
             try {
                 // Fetch the sample file from our API
@@ -689,7 +688,7 @@
                 }
                 
                 const blob = await response.blob();
-                const filename = sampleName === 'guwahati' ? 'guwahati_cloudy_test.tif' : 'chennai_cloudy_test.tif';
+                const filename = 'guwahati_cloudy_test.tif';
                 cloudyFile = new File([blob], filename, { type: 'image/tiff' });
                 
                 // Update file input name label on UI
